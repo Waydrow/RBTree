@@ -144,6 +144,73 @@ void RBTree<T>::insertFix(Node<T> *node) {
 	root->color = BLACK;
 }
 
+// 删除节点操作
+template <class T>
+void RBTree<T>::erase(T key) {
+    // 先查找要删除的点, 若不存在直接返回
+    Node<T> *node = find(root, key);
+    if (node == NULL) return;
+    // 删除操作
+    Node<T> *child, parent;
+    int color;
+    // 存在左右孩子
+    if (node->left != NULL && node->right != NULL) {
+        Node<T> *re = node->right;
+        // re 为要替换掉 node 的节点
+        while(re->left != NULL) {
+            re = re->left;
+        }
+        if (node->parent) {
+            // node 是其父结点的左孩子
+            if (node == node->parent->left) {
+                node->parent->left = re;
+            } else {
+                node->parent->right = re;
+            }
+        } else {
+            // node 为根结点
+            root = re;
+        }
+        child = re->right;
+        parent = re->parent;
+        color = re->color;
+        if (parent == node) {
+            parent = re;
+        } else {
+            if (child)
+                child->parent = parent;
+            parent->left = child;
+            re->right = node->right;
+            node->right->parent = re;
+        }
+
+        re->parent = node->parent;
+        re->color = node->color;
+        re->left = node->left;
+        node->left->parent = re;
+        // 黑色节点需调整
+        if (color == BLACK)
+            eraseFix(child, parent);
+        delete node;
+    }
+}
+
+// 递归查找节点
+template <class T>
+Node<T>* RBTree<T>::find(Node<T>* node, T key) {
+    if (node == NULL || node->key == key) return node;
+    if (key < node->key)
+        return find(node->left, key);
+    else
+        return find(node->right, key);
+}
+
+// 查找节点操作
+template <class T>
+Node<T>* RBTree<T>::find(T key) {
+    return find(root, key);
+}
+
 // 递归清除节点
 template <class T>
 void RBTree<T>::clear(Node<T> * &node) {

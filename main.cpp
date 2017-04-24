@@ -15,6 +15,9 @@ int main() {
 	}
 	tree->print();
 
+	Node<int>* p = tree->find(40);
+	printf("%d %d\n", p->key, p->color);
+
 	tree->clear();
 
 	delete tree;
