@@ -221,6 +221,12 @@ void RBTree<T>::erase(T key) {
     delete node;
 }
 
+// 删除节点的修正操作
+template <class T>
+void RBTree<T>::eraseFix(Node<T> *node, Node<T> *parent) {
+
+}
+
 // 递归查找节点
 template <class T>
 Node<T>* RBTree<T>::find(Node<T>* node, T key) {

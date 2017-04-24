@@ -11,13 +11,18 @@ int main() {
 	RBTree<int> *tree = new RBTree<int>();
 
 	for (int i = 0; i < len; i++) {
-		tree->insert(a[i]);
+        int x;
+        cin >> x;
+        // ÃÌº”
+		tree->insert(x);
+		tree->print();
 	}
 	tree->print();
-
+    // ≤È’“
 	Node<int>* p = tree->find(40);
 	printf("%d %d\n", p->key, p->color);
 
+    // «Âø’
 	tree->clear();
 
 	delete tree;
