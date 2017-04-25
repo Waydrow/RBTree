@@ -11,18 +11,29 @@ int main() {
 	RBTree<int> *tree = new RBTree<int>();
 
 	for (int i = 0; i < len; i++) {
-        int x;
-        cin >> x;
-        // Ìí¼Ó
+        int x = a[i];
+        //cin >> x;
+        // æ’å…¥
 		tree->insert(x);
-		tree->print();
+		//tree->print();
 	}
 	tree->print();
-    // ²éÕÒ
+	int y;
+	cin >> y;
+	tree->insert(y);
+	tree->print();
+	for (int i = 0; i < len; i++) {
+        int x;
+        cin >> x;
+        tree->erase(x);
+        tree->print();
+	}
+	tree->print();
+    // æŸ¥æ‰¾
 	Node<int>* p = tree->find(40);
 	printf("%d %d\n", p->key, p->color);
 
-    // Çå¿Õ
+    // æ¸…ç©º
 	tree->clear();
 
 	delete tree;

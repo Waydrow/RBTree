@@ -64,6 +64,8 @@ void RBTree<T>::rightRotate(Node<T> *y) {
 // 插入一个键为 key 的节点的操作
 template <class T>
 void RBTree<T>::insert(T key) {
+    // 重复的直接返回
+    if (find(key)) return;
 	// 要插入的节点 node
 	Node<T> *node = new Node<T>(key, BLACK, NULL, NULL, NULL);
 
@@ -151,7 +153,7 @@ void RBTree<T>::erase(T key) {
     Node<T> *node = find(root, key);
     if (node == NULL) return;
     // 删除操作
-    Node<T> *child, parent;
+    Node<T> *child, *parent;
     int color;
     // 存在左右孩子
     if (node->left != NULL && node->right != NULL) {
@@ -224,7 +226,77 @@ void RBTree<T>::erase(T key) {
 // 删除节点的修正操作
 template <class T>
 void RBTree<T>::eraseFix(Node<T> *node, Node<T> *parent) {
-
+    Node<T> *brother;
+    while((node == NULL || node->color == BLACK) && node != root) {
+        // node 为左节点
+        if (node == parent->left) {
+            brother = parent->right;
+            if (brother->color == RED) {
+                // case 1: brother is red node
+                brother->color = BLACK;
+                parent->color = RED;
+                leftRotate(parent);
+                brother = parent->right;
+            } else if ((brother->left == NULL || brother->left->color == BLACK) &&
+                       (brother->right == NULL || brother->right->color == BLACK)) {
+                // case 2: brother is black node and brother's 2 children is black
+                brother->color = RED;
+                node = parent;
+                parent = node->parent;
+            } else {
+                if (brother->right == NULL || brother->right->color == BLACK) {
+                    // case 3: brother's right child is black, left child is red
+                    brother->left->color = BLACK;
+                    brother->color = RED;
+                    rightRotate(brother);
+                    brother = parent->right;
+                } else {
+                    // case 4: brother's right child is red
+                    brother->color = parent->color;
+                    parent->color = BLACK;
+                    brother->right->color = BLACK;
+                    leftRotate(parent);
+                    node = root;
+                    break;
+                }
+            }
+        } else {
+            // node 为右节点
+            brother = parent->left;
+            if (brother->color == RED) {
+                // case 1: brother's color is RED
+                brother->color = BLACK;
+                parent->color = RED;
+                rightRotate(parent);
+                brother = parent->left;
+            } else if ((brother->left == NULL || brother->left->color == BLACK) &&
+                       (brother->right == NULL || brother->right->color == BLACK)) {
+                // case 2: brother's 2 children node is black
+                brother->color = RED;
+                node = parent;
+                parent = node->parent;
+            } else {
+                if (brother->left == NULL || brother->left->color == BLACK) {
+                    // case 3: brother's left child is black, right child is red
+                    brother->right->color = BLACK;
+                    brother->color = RED;
+                    leftRotate(brother);
+                    brother = parent->left;
+                } else {
+                    // case 4: brother's left child is red
+                    brother->color = parent->color;
+                    parent->color = BLACK;
+                    brother->left->color = BLACK;
+                    rightRotate(parent);
+                    node = root;
+                    break;
+                }
+            }
+        }
+    }
+    if (node) {
+        node->color = BLACK;
+    }
 }
 
 // 递归查找节点
