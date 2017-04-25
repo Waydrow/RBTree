@@ -33,7 +33,10 @@ tree->print();
 
 ### Delete
 
-still...
+```c++
+// it will delete the node that has value of x in the tree
+tree->erase(x);
+```
 
 ### Clear
 
